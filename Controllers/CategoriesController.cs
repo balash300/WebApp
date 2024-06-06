@@ -1,79 +1,53 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
 using WebApplication2.Models;
+using WebApplication2.Repository;
+using WebApplication2.Services;
 
 namespace WebApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : Controller
     {
-        private readonly DataContext _context;
+        private readonly CategoryService _categoryService;
 
-        public CategoriesController(DataContext context)
+        public CategoriesController(ICategoryRepository categoryRepository)
         {
-            _context = context;
+            _categoryService = new CategoryService(categoryRepository);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Categories>>> GetAllCategories()
+        public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
         {
-            var categories = await _context.Categories.Include(p => p.Products).ToListAsync();
-
-            return Ok(categories);
+            var categories = await _categoryService.GetAllCategories();
+            return categories;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Categories>> GetCategory(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-
-            if (category is null)
-                return NotFound("Category not found...");
-
-            return Ok(category);
+        public async Task<ActionResult<Category>> GetCategory(int id)
+        { 
+            return await _categoryService.GetCategory(id);
         }
-
+        
         [HttpPost]
-        public async Task<ActionResult<List<Categories>>> CreateCategory(Categories categories)
+        public async Task<ActionResult<IEnumerable<Category>>> CreateCategory(Category category)
         {
-            _context.Categories.Add(categories);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Categories.Include(p => p.Products).ToListAsync());
+            return await _categoryService.CreateCategory(category);
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Categories>>> UpdateCategory(Categories updateCategories)
+        public async Task<ActionResult<IEnumerable<Category>>> UpdateCategory(Category updateCategory)
         {
-            var dbCategories = await _context.Categories.FindAsync(updateCategories.Id);
-
-            if (dbCategories is null)
-                return NotFound("Category not found...");
-
-            dbCategories.Name = updateCategories.Name;
-            dbCategories.Description = updateCategories.Description;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Categories.Include(p => p.Products).ToListAsync());
+            return await _categoryService.UpdateCategory(updateCategory);
         }
 
         [HttpDelete]
-        public async Task<ActionResult<List<Categories>>> DeleteCategory(int id)
+        public async Task<ActionResult<IEnumerable<Category>>> DeleteCategory(int id)
         {
-            var dbCategories = await _context.Categories.FindAsync(id);
-
-            if (dbCategories is null)
-                return NotFound("Category not found...");
-
-            _context.Categories.Remove(dbCategories);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Categories.Include(p => p.Products).ToListAsync());
+            return await _categoryService.DeleteCategory(id);
         }
-
-
     }
 }

@@ -2,7 +2,7 @@
 
 namespace WebApplication2.Models
 {
-    public class Products
+    public class Product
     {
         [Key]
         public int Id { get; set; }
@@ -13,17 +13,7 @@ namespace WebApplication2.Models
 
         public int Price { get; set; }
         public int StockQuantity { get; set; }
-        public DateTime CreatedDate { get; }
 
-        public virtual Categories Categories { get; set; }
-
-        public Products(string name, string description, int price, int stockQuantity)
-        {
-            Name = name;
-            Description = description;
-            Price = price;
-            StockQuantity = stockQuantity;
-            CreatedDate = DateTime.Now;
-        }
+        public virtual Category Categories { get; set; }
     }
 }

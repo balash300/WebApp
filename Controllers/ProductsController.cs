@@ -1,78 +1,52 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApplication2.Data;
 using WebApplication2.Models;
+using WebApplication2.Repository;
+using WebApplication2.Services;
+
 
 namespace WebApplication2.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly ProductService _productService;
 
-        public ProductsController(DataContext context)
+        public ProductsController(IProductRepository productRepository)
         {
-            _context = context;
+            _productService = new ProductService(productRepository);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Products>>> GetAllProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
-            return await _context.Products.Include(p => p.Categories).ToListAsync();
+            return await _productService.GetAllProducts();
         }
 
-
         [HttpGet("{id}")]
-        public async Task<ActionResult<Products>> GetProduct(int id)
+        public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-
-            if (product is null)
-                return NotFound("Product not found...");
-
-            return Ok(product);
+            return await _productService.GetProduct(id);
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Products>>> CreateProduct(Products products)
+        public async Task<ActionResult<IEnumerable<Product>>> CreateProduct(Product product)
         {
-            _context.Products.Add(products);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return await _productService.CreateProduct(product);
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Products>>> UpdateProduct(Products updateProducts)
+        public async Task<ActionResult<IEnumerable<Product>>> UpdateProduct(Product product)
         {
-            var dbProducts = await _context.Products.FindAsync(updateProducts.Id);
-
-            if (dbProducts is null)
-                return NotFound("Product not found...");
-
-            dbProducts.Name = updateProducts.Name;
-            dbProducts.Description = updateProducts.Description;
-            dbProducts.Price = updateProducts.Price;
-            dbProducts.StockQuantity = updateProducts.StockQuantity;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return await _productService.UpdateProduct(product);
         }
 
         [HttpDelete]
-        public async Task<ActionResult<List<Products>>> DeleteProduct(int id)
+        public async Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id)
         {
-            var dbProducts = await _context.Products.FindAsync(id);
-
-            if (dbProducts is null)
-                return NotFound("Product not found...");
-
-            _context.Products.Remove(dbProducts);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return await _productService.DeleteProduct(id);
         }
     }
 }

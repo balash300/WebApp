@@ -11,20 +11,20 @@ using WebApplication2.Data;
 namespace WebApplication2.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240526203357_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240606055134_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApplication2.Models.Categories", b =>
+            modelBuilder.Entity("WebApplication2.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace WebApplication2.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.Products", b =>
+            modelBuilder.Entity("WebApplication2.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,9 +77,9 @@ namespace WebApplication2.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.Products", b =>
+            modelBuilder.Entity("WebApplication2.Models.Product", b =>
                 {
-                    b.HasOne("WebApplication2.Models.Categories", "Categories")
+                    b.HasOne("WebApplication2.Models.Category", "Categories")
                         .WithMany("Products")
                         .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -88,7 +88,7 @@ namespace WebApplication2.Migrations
                     b.Navigation("Categories");
                 });
 
-            modelBuilder.Entity("WebApplication2.Models.Categories", b =>
+            modelBuilder.Entity("WebApplication2.Models.Category", b =>
                 {
                     b.Navigation("Products");
                 });
