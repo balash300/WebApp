@@ -13,29 +13,29 @@ namespace WebApplication2.Services
             _productRepository = productRepository;
         }
 
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<Product> GetProductAsync(int id)
         {
-            return await _productRepository.GetProduct(id);
+            return await _productRepository.GetProductAsync(id);
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return await _productRepository.GetAllProducts();
+            return await _productRepository.GetAllProductsAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> CreateProduct(Product product)
+        public async Task<IEnumerable<Product>> CreateProductAsync(Product product)
         {
-            return await _productRepository.CreateProduct(product);
+            return await _productRepository.CreateProductAsync(product);
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> UpdateProduct(Product product)
+        public async Task<IEnumerable<Product>> UpdateProductAsync(int id, Product product)
         {
-            return await _productRepository.UpdateProduct(product);
+            return await _productRepository.UpdateProductAsync(id, product);
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id)
+        public async Task<IEnumerable<Product>> DeleteProductAsync(int id)
         {
-            return await _productRepository.DeleteProduct(id);
+            return await _productRepository.DeleteProductAsync(id);
         }
     }
 }

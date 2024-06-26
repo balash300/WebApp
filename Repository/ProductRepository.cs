@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
+using WebApplication2.Exceptions;
 using WebApplication2.Models;
 
 namespace WebApplication2.Repository
 {
-    public class ProductRepository : ControllerBase, IProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly DataContext _context;
 
@@ -14,35 +15,35 @@ namespace WebApplication2.Repository
             _context = context;
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return await _context.Products.Include(p => p.Categories).ToListAsync();
         }
 
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<Product> GetProductAsync(int id)
         {
             var data = await _context.Products.FindAsync(id);
 
             if (data.Equals(null))
-                return NotFound("Data not found...");
+                throw new NotFoundException("Data not found...");
 
-            return Ok(data);
+            return data;
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> CreateProduct(Product product)
+        public async Task<IEnumerable<Product>> CreateProductAsync(Product product)
         {
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return await _context.Products.Include(p => p.Categories).ToListAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> UpdateProduct(Product product)
+        public async Task<IEnumerable<Product>> UpdateProductAsync(int id, Product product)
         {
-            var dbProducts = await _context.Products.FindAsync(product.Id);
+            var dbProducts = await _context.Products.FindAsync(id);
 
             if (dbProducts is null)
-                return NotFound("Product not found...");
+                throw new NotFoundException("Product not found...");
 
             dbProducts.Name = product.Name;
             dbProducts.Description = product.Description;
@@ -51,20 +52,20 @@ namespace WebApplication2.Repository
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return await _context.Products.Include(p => p.Categories).ToListAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id)
+        public async Task<IEnumerable<Product>> DeleteProductAsync(int id)
         {
             var product = await _context.Products.FindAsync(id);
 
             if (product.Equals(null))
-                return NotFound("Data not found...");
+                throw new NotFoundException("Data not found...");
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Products.Include(p => p.Categories).ToListAsync());
+            return null;
         }
     }
 }

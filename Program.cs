@@ -45,7 +45,11 @@ namespace WebApplication2
 
             app.UseHttpsRedirection();
 
-            app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(policy => policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed(origin => true));
 
             app.UseAuthorization();
 

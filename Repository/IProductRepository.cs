@@ -5,10 +5,10 @@ namespace WebApplication2.Repository
 {
     public interface IProductRepository
     {
-        public Task<ActionResult<IEnumerable<Product>>> GetAllProducts();
-        public Task<ActionResult<Product>> GetProduct(int id);
-        public Task<ActionResult<IEnumerable<Product>>> CreateProduct(Product product);
-        public Task<ActionResult<IEnumerable<Product>>> UpdateProduct(Product product);
-        public Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id);
+        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<Product> GetProductAsync(int id);
+        Task<IEnumerable<Product>> CreateProductAsync(Product product);
+        Task<IEnumerable<Product>> UpdateProductAsync(int id, Product product);
+        Task<IEnumerable<Product>> DeleteProductAsync(int id);
     }
 }

@@ -13,29 +13,29 @@ namespace WebApplication2.Services
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<Category> GetCategoryAsync(int id)
         {
-            return await _categoryRepository.GetCategory(id);
+            return await _categoryRepository.GetCategoryAsync(id);
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _categoryRepository.GetAllCategories();
+            return await _categoryRepository.GetAllCategoriesAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> CreateCategory(Category category)
+        public async Task<IEnumerable<Category>> CreateCategoryAsync(Category category)
         {
-            return await _categoryRepository.CreateCategory(category);
+            return await _categoryRepository.CreateCategoryAsync(category);
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> UpdateCategory(Category category)
+        public async Task<IEnumerable<Category>> UpdateCategoryAsync(int id, Category category)
         {
-            return await _categoryRepository.UpdateCategory(category);
+            return await _categoryRepository.UpdateCategoryAsync(id, category);
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> DeleteCategory(int id)
+        public async Task<IEnumerable<Category>> DeleteCategoryAsync(int id)
         {
-            return await _categoryRepository.Delete(id);
+            return await _categoryRepository.DeleteCategoryAsync(id);
         }
     }
 }

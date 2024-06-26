@@ -5,10 +5,10 @@ namespace WebApplication2.Repository
 {
     public interface ICategoryRepository
     {
-        public Task<ActionResult<IEnumerable<Category>>> GetAllCategories();
-        public Task<ActionResult<Category>> GetCategory(int id);
-        public Task<ActionResult<IEnumerable<Category>>> CreateCategory(Category category);
-        public Task<ActionResult<IEnumerable<Category>>> UpdateCategory(Category category);
-        public Task<ActionResult<IEnumerable<Category>>> Delete(int id);
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
+        Task<Category> GetCategoryAsync(int id);
+        Task<IEnumerable<Category>> CreateCategoryAsync(Category category);
+        Task<IEnumerable<Category>> UpdateCategoryAsync(int id, Category category);
+        Task<IEnumerable<Category>> DeleteCategoryAsync(int id);
     }
 }

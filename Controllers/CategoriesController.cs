@@ -10,7 +10,7 @@ namespace WebApplication2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : Controller
+    public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _categoryService;
 
@@ -20,34 +20,35 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
+        public async Task<ActionResult<IEnumerable<Category>>> GetAllCategoriesAsync()
         {
-            var categories = await _categoryService.GetAllCategories();
-            return categories;
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return Ok(categories);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategoryAsync(int id)
         { 
-            return await _categoryService.GetCategory(id);
+            return Ok(await _categoryService.GetCategoryAsync(id));
         }
         
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Category>>> CreateCategory(Category category)
+        public async Task<ActionResult<IEnumerable<Category>>> CreateCategoryAsync(Category category)
         {
-            return await _categoryService.CreateCategory(category);
+            return Ok(await _categoryService.CreateCategoryAsync(category));
         }
 
-        [HttpPut]
-        public async Task<ActionResult<IEnumerable<Category>>> UpdateCategory(Category updateCategory)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<IEnumerable<Category>>> UpdateCategoryAsync(int id, Category updateCategory)
         {
-            return await _categoryService.UpdateCategory(updateCategory);
+            return Ok(await _categoryService.UpdateCategoryAsync(id, updateCategory));
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<IEnumerable<Category>>> DeleteCategory(int id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<IEnumerable<Category>>> DeleteCategoryAsync(int id)
         {
-            return await _categoryService.DeleteCategory(id);
+            await _categoryService.DeleteCategoryAsync(id);
+            return NoContent();
         }
     }
 }

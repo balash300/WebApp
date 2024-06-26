@@ -19,10 +19,5 @@ namespace WebApplication2.Data
             modelBuilder.Entity<Product>().ToTable("Products");
             modelBuilder.Entity<Category>().ToTable("Categories");
         }
-
-        internal async Task FindAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

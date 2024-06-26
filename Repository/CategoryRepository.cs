@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
+using WebApplication2.Exceptions;
 using WebApplication2.Models;
 
 namespace WebApplication2.Repository
 {
-    public class CategoryRepository : ControllerBase, ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly DataContext _context;
 
@@ -14,55 +15,55 @@ namespace WebApplication2.Repository
             _context = context;
         }
 
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<Category> GetCategoryAsync(int id)
         {
             var data = await _context.Categories.FindAsync(id);
 
             if (data.Equals(null))
-                return NotFound("Data not found...");
+                throw new NotFoundException("Data not found...");
 
-            return Ok(data);
+            return data;
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return Ok(await _context.Categories.Include(c => c.Products).ToListAsync());
+            return await _context.Categories.Include(c => c.Products).ToListAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> CreateCategory(Category category)
+        public async Task<IEnumerable<Category>> CreateCategoryAsync(Category category)
         {
             var data = _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Categories.Include(c => c.Products).ToListAsync());
+            return await _context.Categories.Include(c => c.Products).ToListAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> UpdateCategory(Category category)
+        public async Task<IEnumerable<Category>> UpdateCategoryAsync(int id, Category category)
         {
-            var data = _context.Categories.FindAsync(category.Id);
+            var data = _context.Categories.FindAsync(id);
 
             if (data.Equals(null))
-                return NotFound("Data not found...");
+                throw new NotFoundException("Data not found...");
 
             data.Result.Name = category.Name;
             data.Result.Description = category.Description;
 
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Categories.Include(c => c.Products).ToListAsync());
+            return await _context.Categories.Include(c => c.Products).ToListAsync();
         }
 
-        public async Task<ActionResult<IEnumerable<Category>>> Delete(int id)
+        public async Task<IEnumerable<Category>> DeleteCategoryAsync(int id)
         {
             var data = _context.Categories.FindAsync(id);
 
             if (data.Equals(null))
-                return NotFound("Data not found...");
+                throw new NotFoundException("Data not found...");
 
             _context.Categories.Remove(data.Result);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Categories.Include(c => c.Products).ToListAsync());
+            return null;
         }
     }
 }

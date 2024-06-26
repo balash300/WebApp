@@ -20,33 +20,34 @@ namespace WebApplication2.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
-            return await _productService.GetAllProducts();
+            return Ok(await _productService.GetAllProductsAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<Product>> GetProductAsync(int id)
         {
-            return await _productService.GetProduct(id);
+            return Ok(await _productService.GetProductAsync(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<Product>>> CreateProduct(Product product)
+        public async Task<ActionResult<IEnumerable<Product>>> CreateProductAsync(Product product)
         {
-            return await _productService.CreateProduct(product);
+            return Ok(await _productService.CreateProductAsync(product));
         }
 
-        [HttpPut]
-        public async Task<ActionResult<IEnumerable<Product>>> UpdateProduct(Product product)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<IEnumerable<Product>>> UpdateProductAsync(int id, Product product)
         {
-            return await _productService.UpdateProduct(product);
+            return Ok(await _productService.UpdateProductAsync(id, product));
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<IEnumerable<Product>>> DeleteProduct(int id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<IEnumerable<Product>>> DeleteProductAsync(int id)
         {
-            return await _productService.DeleteProduct(id);
+            await _productService.DeleteProductAsync(id);
+            return NoContent();
         }
     }
 }
